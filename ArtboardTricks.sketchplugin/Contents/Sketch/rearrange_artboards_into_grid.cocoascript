@@ -118,14 +118,25 @@ function rearrangeArtboardsIntoGrid(context) {
   }
 
   // finally, arrange everything
-  var y = 0;
+  var originX = 0, originY = 0;
+  if (rows.length >= 1 && rows[0].length >= 1) {
+    originX = rows[0][0].artboard.frame().x();
+    originY = rows[0][0].artboard.frame().y();
+  }
+
+  // there's a weird thing in sketch where using 0,0 doesn't
+  // always result in the artboard actually being at 0,0
+  // see:
+  // https://github.com/romannurik/Sketch-ArtboardTricks/issues/1
+
+  var y = originY;
   for (var r = 0; r < rows.length; r++) {
     var metasInRow = rows[r];
-    var x = 0;
+    var x = originX;
     for (var c = 0; c < metasInRow.length; c++) {
       var frame = metasInRow[c].artboard.frame();
-      frame.x = x;
-      frame.y = y;
+      frame.setX(x);
+      frame.setY(y);
       x += frame.width() + X_SPACING;
     }
     y += rowHeights[r] + Y_SPACING;
