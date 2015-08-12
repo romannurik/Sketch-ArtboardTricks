@@ -15,12 +15,14 @@ Selects the artboard(s) that contain your selection. Useful if you want to selec
 
 ## Rearrange Artboards Into Grid
 
-Automatically rearranges your artboards into rows. Each row can contain an arbitrary number of columns.
+Automatically rearranges your artboards into rows containing an arbitrary number of columns.
 This is useful for organizing your artboards into distinct "flows", where each row corresponds to a flow.
 
 ![Demo Screencap](https://raw.githubusercontent.com/romannurik/Sketch-ArtboardTricks/master/art/rearrange.gif)
 
 Rows are 400px apart and columns are 100px apart (might be configurable in the future).
+
+The command also re-orders the list of artboards in the sidenav according to its position. 
 
 Note that there are no current configuration options, everything is automatic. The arrangement is based on
 the current position of each artboard.
