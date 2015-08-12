@@ -63,9 +63,13 @@ function prependNumbersToArtboards(context) {
     var prefix = (row + 1) + ((col < 10) ? '0' : '') + col;
 
     // strip off current digits and dots
-    var currentName = meta.artboard.name();
-    currentName = currentName.replace(/^\d*_?/, '');
-    meta.artboard.setName(prefix + '_' + currentName);
+    var fullName = meta.artboard.name();
+    var currentNamePath = fullName.substring(0, fullName.lastIndexOf('/') + 1);
+    var currentName = fullName.slice(currentNamePath.length);
+    currentName = currentName.replace(/^\d*[_-]?/, '');
+
+    // add prefix to the name
+    meta.artboard.setName(currentNamePath + prefix + '_' +  currentName);
 
     ++col;
     if (artboardsAtYPosition[meta.t] <= col) {
