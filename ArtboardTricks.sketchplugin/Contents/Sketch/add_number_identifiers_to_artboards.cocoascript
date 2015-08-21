@@ -24,6 +24,8 @@ function prependNumbersToArtboards(context) {
   var artboardMetas = [];
   var artboards = context.document.currentPage().artboards();
 
+  var numRows = 0;
+
   // locally cache artboard positions
   var artboardsAtYPosition = {};
   for (var i = 0; i < artboards.count(); i++) {
@@ -40,6 +42,7 @@ function prependNumbersToArtboards(context) {
     var t = frame.minY();
     if (!(t in artboardsAtYPosition)) {
       artboardsAtYPosition[t] = 0;
+      ++numRows;
     }
     ++artboardsAtYPosition[t];
   }
@@ -61,6 +64,9 @@ function prependNumbersToArtboards(context) {
 
     // create prefix (e.g. "301")
     var prefix = (row + 1) + ((col < 10) ? '0' : '') + col;
+    if (numRows >= 10 && row < 9) {
+      prefix = '0' + prefix;
+    }
 
     // strip off current digits and dots
     var fullName = meta.artboard.name();
