@@ -16,8 +16,9 @@
 
 @import 'util.js'
 
-var X_SPACING = 100;
-var Y_SPACING = 400;
+var DEFAULT_X_SPACING = 100;
+var DEFAULT_Y_SPACING = 400;
+var SPACING_LAYER_KEY = 'artboard_tricks_spacing';
 
 var onRun = function(context) {
   rearrangeArtboardsIntoGrid(context);
@@ -25,6 +26,9 @@ var onRun = function(context) {
 
 function rearrangeArtboardsIntoGrid(context) {
   var page = context.document.currentPage();
+
+  var spacing = getSpacingForPage(context, page);
+
   var artboardMetas = [];
   var artboards = page.artboards();
 
@@ -137,9 +141,9 @@ function rearrangeArtboardsIntoGrid(context) {
       var frame = metasInRow[c].artboard.frame();
       frame.setX(x);
       frame.setY(y);
-      x += frame.width() + X_SPACING;
+      x += frame.width() + spacing.xSpacing;
     }
-    y += rowHeights[r] + Y_SPACING;
+    y += rowHeights[r] + spacing.ySpacing;
   }
 
   // update artboard position in the sidebar
@@ -158,3 +162,35 @@ function rearrangeArtboardsIntoGrid(context) {
   });
 
 }
+
+function getSpacingForPage(context, page) {
+  return context.command.valueForKey_onLayer_(SPACING_LAYER_KEY, page) || {
+    xSpacing: DEFAULT_X_SPACING,
+    ySpacing: DEFAULT_Y_SPACING
+  };
+}
+
+var onSetCustomSpacing = function(context) {
+  var page = context.document.currentPage();
+
+  var currentSpacing = getSpacingForPage(context, page);
+
+  var spacingStr = context.document.askForUserInput_initialValue(
+      'Enter comma-separated X and Y spacing.', currentSpacing.xSpacing + ', ' + currentSpacing.ySpacing);
+  var spacings = spacingStr.split(/,/g);
+  if (spacings.length >= 2) {
+    var spacing = {
+      xSpacing: parseInt(spacings[0], 10),
+      ySpacing: parseInt(spacings[1], 10)
+    };
+
+    if (spacing.xSpacing && spacing.ySpacing) {
+      // success
+      context.command.setValue_forKey_onLayer_(spacing, SPACING_LAYER_KEY, page);
+      context.document.showMessage('Saved spacing for rearrange.');
+      return;
+    }
+  }
+
+  context.document.showMessage('Invalid input: ' + spacingStr);
+};
