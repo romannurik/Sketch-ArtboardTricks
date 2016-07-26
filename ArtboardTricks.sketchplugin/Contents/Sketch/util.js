@@ -15,7 +15,7 @@
  */
 
 function isArtboard(layer) {
-  return layer.isMemberOfClass(MSArtboardGroup.class());
+  return layer instanceof MSArtboardGroup || layer instanceof MSSymbolMaster;
 }
 
 function setSelection(context, layers) {
