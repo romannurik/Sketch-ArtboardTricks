@@ -22,10 +22,12 @@ This is useful for organizing your artboards into distinct "flows", where each r
 
 Rows are 400px apart and columns are 100px apart (might be configurable in the future).
 
-The command also re-orders the list of artboards in the sidenav according to its position. 
+The command also re-orders the list of artboards in the sidenav according to its position.
 
 Note that there are no current configuration options, everything is automatic. The arrangement is based on
 the current position of each artboard.
+
+If you select some artboards, then only the artboards you have selected will be rearranged.
 
 ## Prefix Artboard Names With Numbers
 

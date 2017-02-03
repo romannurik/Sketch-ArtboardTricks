@@ -32,6 +32,23 @@ function rearrangeArtboardsIntoGrid(context) {
   var artboardMetas = [];
   var artboards = page.artboards();
 
+  // If artboards are selected, then only rearange those artboards
+  if(context.selection.count() != 0) {
+    artboards.removeAllObjects()
+    for (var i = 0; i < context.selection.count(); i++) {
+      var layer = context.selection.objectAtIndex(i);
+      if(isArtboard(layer)) {
+        artboards.push(layer);
+      }
+    }
+  }
+
+  // If there are no artboards selected, then select all artboards on the page
+  if (artboards.count() == 0) {
+      log("Nothing Selected");
+      var artboards = page.artboards();
+  }
+
   // locally cache artboard positions
   for (var i = 0; i < artboards.count(); i++) {
     var artboard = artboards.objectAtIndex(i);
