@@ -37,8 +37,10 @@
   "menu" : {
     "items" : [
       "select_artboards_containing_selection",
+      "-",
       "rearrange_artboards_into_grid",
       "set_rearrange_spacing",
+      "-",
       "add_number_identifiers_to_artboards",
       "remove_number_identifiers_from_artboards"
     ],
