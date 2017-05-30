@@ -21,8 +21,10 @@ var onRun = function(context) {
 };
 
 function prependNumbersToArtboards(context) {
+  var page = context.document.currentPage();
+
   var artboardMetas = [];
-  var artboards = context.document.currentPage().artboards();
+  var artboards = getArtboards(context, page);
 
   var numRows = 0;
 

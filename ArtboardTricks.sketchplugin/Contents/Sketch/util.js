@@ -24,3 +24,28 @@ function setSelection(context, layers) {
     [l select:true byExpandingSelection:true];
   });
 }
+
+// Returns a list of artboards
+// If at least one artboard is selected, return only the selected artboards
+// If no artboards are selected, then return all of the artboards on the page
+function getArtboards(context, page) {
+  var artboards = page.artboards();
+
+  // If artboards are selected, then only return those artboards
+  if(context.selection.count() != 0) {
+    artboards.removeAllObjects()
+    for (var i = 0; i < context.selection.count(); i++) {
+      var layer = context.selection.objectAtIndex(i);
+      if(isArtboard(layer)) {
+        artboards.push(layer);
+      }
+    }
+  }
+
+  // If there are no artboards selected, then return all artboards on the page
+  if (artboards.count() == 0) {
+      artboards = page.artboards();
+  }
+
+  return artboards;
+}
