@@ -1,4 +1,5 @@
 # Artboard Tricks plugin for Sketch
+[![Download from Sketchpacks.com](https://badges.sketchpacks.com/plugins/net.nurik.roman.sketch.artboardtricks/version.svg)](https://api.sketchpacks.com/v1/plugins/net.nurik.roman.sketch.artboardtricks/download) [![Compatible Sketch Version](https://badges.sketchpacks.com/plugins/net.nurik.roman.sketch.artboardtricks/compatibility.svg)](https://sketchpacks.com/romannurik/Sketch-ArtboardTricks)
 
 Contains a set of artboard tricks for Sketch. See below for more.
 
