@@ -52,5 +52,6 @@
   "description" : "A variety of tricks for dealing with artboards.",
   "authorEmail" : "roman@nurik.net",
   "author" : "Roman Nurik",
+  "appcast": "https://api.sketchpacks.com/v1/plugins/net.nurik.roman.sketch.artboardtricks/appcast",
   "name" : "Artboard Tricks"
 }
