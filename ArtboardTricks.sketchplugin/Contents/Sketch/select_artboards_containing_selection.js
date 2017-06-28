@@ -16,14 +16,16 @@
 
 @import 'util.js'
 
-var onRun = function(context) {
+
+function onRun(context) {
   if (context.selection.count() == 0) {
     context.document.showMessage('Please select some objects.');
     return;
   }
 
   selectArtboardsContainingSelection(context);
-};
+}
+
 
 function selectArtboardsContainingSelection(context) {
   var selectedArtboards = [];

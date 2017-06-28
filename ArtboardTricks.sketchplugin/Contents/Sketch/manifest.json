@@ -1,34 +1,34 @@
 {
   "commands" : [
     {
-      "script" : "select_artboards_containing_selection.cocoascript",
+      "script" : "select_artboards_containing_selection.js",
       "handler" : "onRun",
       "shortcut" : "ctrl cmd option s",
       "name" : "Select Artboards Containing Selection",
       "identifier" : "select_artboards_containing_selection"
     },
     {
-      "script" : "rearrange_artboards_into_grid.cocoascript",
+      "script" : "rearrange_artboards_into_grid.js",
       "handler" : "onRun",
       "shortcut" : "ctrl cmd option r",
       "name" : "Rearrange Artboards Into Grid",
       "identifier" : "rearrange_artboards_into_grid"
     },
     {
-      "script" : "rearrange_artboards_into_grid.cocoascript",
+      "script" : "rearrange_artboards_into_grid.js",
       "handler" : "onSetCustomSpacing",
       "name" : "Set Artboard Spacing for Rearrange",
       "identifier" : "set_rearrange_spacing"
     },
     {
-      "script" : "add_number_identifiers_to_artboards.cocoascript",
+      "script" : "add_number_identifiers_to_artboards.js",
       "handler" : "onRun",
       "shortcut" : "ctrl cmd option n",
       "name" : "Prefix Artboard Names With Numbers",
       "identifier" : "add_number_identifiers_to_artboards"
     },
     {
-      "script" : "remove_number_identifiers_from_artboards.cocoascript",
+      "script" : "remove_number_identifiers_from_artboards.js",
       "handler" : "onRun",
       "name" : "Remove Artboard Number Prefixes",
       "identifier" : "remove_number_identifiers_from_artboards"
@@ -47,7 +47,7 @@
     "title" : "Artboard Tricks"
   },
   "identifier" : "net.nurik.roman.sketch.artboardtricks",
-  "version" : "1.0.3",
+  "version" : "1.0.4",
   "compatibleVersion": 41,
   "description" : "A variety of tricks for dealing with artboards.",
   "authorEmail" : "roman@nurik.net",

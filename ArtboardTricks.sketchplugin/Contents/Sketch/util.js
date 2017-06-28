@@ -19,8 +19,6 @@ function isArtboard(layer) {
 }
 
 function setSelection(context, layers) {
-  context.document.currentPage().deselectAllLayers();
-  layers.forEach(function(l) {
-    [l select:true byExpandingSelection:true];
-  });
+  context.document.currentPage().changeSelectionBySelectingLayers(null);
+  layers.forEach(l => l.select_byExpandingSelection_(true, true));
 }

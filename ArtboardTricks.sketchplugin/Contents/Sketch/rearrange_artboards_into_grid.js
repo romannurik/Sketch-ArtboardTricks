@@ -16,13 +16,16 @@
 
 @import 'util.js'
 
-var DEFAULT_X_SPACING = 100;
-var DEFAULT_Y_SPACING = 400;
-var SPACING_LAYER_KEY = 'artboard_tricks_spacing';
 
-var onRun = function(context) {
+const DEFAULT_X_SPACING = 100;
+const DEFAULT_Y_SPACING = 400;
+const SPACING_LAYER_KEY = 'artboard_tricks_spacing';
+
+
+function onRun(context) {
   rearrangeArtboardsIntoGrid(context);
-};
+}
+
 
 function rearrangeArtboardsIntoGrid(context) {
   var page = context.document.currentPage();
@@ -160,8 +163,8 @@ function rearrangeArtboardsIntoGrid(context) {
     page.removeLayer(a);
     page.addLayers(NSArray.arrayWithObjects(a));
   });
-
 }
+
 
 function getSpacingForPage(context, page) {
   return context.command.valueForKey_onLayer_(SPACING_LAYER_KEY, page) || {
@@ -170,7 +173,8 @@ function getSpacingForPage(context, page) {
   };
 }
 
-var onSetCustomSpacing = function(context) {
+
+function onSetCustomSpacing(context) {
   var page = context.document.currentPage();
 
   var currentSpacing = getSpacingForPage(context, page);
@@ -193,4 +197,4 @@ var onSetCustomSpacing = function(context) {
   }
 
   context.document.showMessage('Invalid input: ' + spacingStr);
-};
+}

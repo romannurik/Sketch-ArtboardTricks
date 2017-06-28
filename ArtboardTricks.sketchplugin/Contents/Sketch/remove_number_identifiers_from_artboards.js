@@ -16,22 +16,24 @@
 
 @import 'util.js'
 
-var onRun = function(context) {
+
+function onRun(context) {
   removeNumbersFromArtboards(context);
-};
+}
+
 
 function removeNumbersFromArtboards(context) {
-  var artboards = context.document.currentPage().artboards();
+  let artboards = context.document.currentPage().artboards();
 
   // update artboard names
-  for (var i = 0; i < artboards.count(); i++) {
-    var artboard = artboards.objectAtIndex(i);
+  for (let i = 0; i < artboards.count(); i++) {
+    let artboard = artboards.objectAtIndex(i);
 
     // strip off current digits and dots
-    var fullName = artboard.name();
-    var currentNamePath = fullName.substring(0, fullName.lastIndexOf('/') + 1);
-    var currentName = fullName.slice(currentNamePath.length);
-    currentName = currentName.replace(/^\d*[-_]?/, '');
+    let fullName = artboard.name();
+    let currentNamePath = fullName.substring(0, fullName.lastIndexOf('/') + 1);
+    let currentName = fullName.slice(currentNamePath.length);
+    currentName = currentName.replace(/^[\d.]*[-_]?/, '');
 
     // reset the name
     artboard.setName(currentNamePath + currentName);
