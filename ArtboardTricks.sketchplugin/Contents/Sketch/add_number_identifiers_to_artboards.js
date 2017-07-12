@@ -26,10 +26,8 @@ function prependNumbersToArtboards(context) {
   let artboardMetas = [];
   let artboards = context.document.currentPage().artboards();
 
-  let numRows = 0;
-
   // locally cache artboard positions
-  let artboardsAtYPosition = {};
+  let uniqueYPositions = new Set();
   for (let i = 0; i < artboards.count(); i++) {
     let artboard = artboards.objectAtIndex(i);
     let frame = artboard.frame();
@@ -41,13 +39,10 @@ function prependNumbersToArtboards(context) {
       b: frame.maxY()
     });
 
-    let t = frame.minY();
-    if (!(t in artboardsAtYPosition)) {
-      artboardsAtYPosition[t] = 0;
-      ++numRows;
-    }
-    ++artboardsAtYPosition[t];
+    uniqueYPositions.add(Number(frame.minY()));
   }
+
+  let numRows = uniqueYPositions.size;
 
   // sort artboards top-down then left-right
   artboardMetas.sort((a, b) => {
@@ -61,7 +56,8 @@ function prependNumbersToArtboards(context) {
   // update artboard names
   let row = 0;
   let col = -1;
-  let subCol = -1;
+  let subCol = 0;
+  let lastMetaT = null;
   for (let i = 0; i < artboardMetas.length; i++) {
     let meta = artboardMetas[i];
 
@@ -71,36 +67,34 @@ function prependNumbersToArtboards(context) {
     let currentName = fullName.slice(currentNamePath.length);
     let [_, currentNumber, baseName] = currentName.match(/^([\d.]*)[_-]?(.*)$/);
 
+    if (lastMetaT === null || lastMetaT != meta.t) {
+      lastMetaT = meta.t;
+      ++row;
+      subCol = 0;
+      col = -1;
+    }
+
     if (currentNumber.indexOf('.') >= 0) {
       // in a subcol
-      if (subCol < 0) {
-        // new subcol
-      }
-
       ++subCol;
+      col = Math.max(0, col);
     } else {
       // not in a subcol
       if (subCol >= 0) {
         // no longer in a subcol
-        subCol = -1;
+        subCol = 0;
       }
 
       ++col;
     }
 
     // create prefix (e.g. "301" and "415.4" with subflows)
-    let prefix = zeropad(row + 1, numRows >= 10 ? 2 : 1)
+    let prefix = zeropad(row, numRows >= 10 ? 2 : 1)
         + zeropad(col, 2)
-        + (subCol >= 0 ? '.' + (1 + subCol) : '');
+        + (subCol > 0 ? '.' + (subCol) : '');
 
     // add prefix to the name
     meta.artboard.setName(`${currentNamePath}${prefix}_${baseName}`);
-
-    if (artboardsAtYPosition[meta.t] <= col) {
-      ++row;
-      subCol = -1;
-      col = -1;
-    }
   }
 }
 
