@@ -1,6 +1,13 @@
 {
   "commands" : [
     {
+      "script" : "both.js",
+      "handler" : "onRun",
+      "name" : "Magic",
+      "shortcut" : "cmd º",
+      "identifier" : "select_artboards_containing_selection_and_set_rearrange_spacing"
+    },
+    {
       "script" : "select_artboards_containing_selection.js",
       "handler" : "onRun",
       "shortcut" : "ctrl cmd option s",

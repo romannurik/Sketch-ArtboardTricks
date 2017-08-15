@@ -16,21 +16,21 @@
 
 @import 'util.js'
 
-
-function onRun(context) {
+var onRun = function(context) {
   prependNumbersToArtboards(context);
-}
-
+};
 
 function prependNumbersToArtboards(context) {
-  let artboardMetas = [];
-  let artboards = context.document.currentPage().artboards();
+  var artboardMetas = [];
+  var artboards = context.document.currentPage().artboards();
+
+  var numRows = 0;
 
   // locally cache artboard positions
-  let uniqueYPositions = new Set();
-  for (let i = 0; i < artboards.count(); i++) {
-    let artboard = artboards.objectAtIndex(i);
-    let frame = artboard.frame();
+  var artboardsAtYPosition = {};
+  for (var i = 0; i < artboards.count(); i++) {
+    var artboard = artboards.objectAtIndex(i);
+    var frame = artboard.frame();
     artboardMetas.push({
       artboard: artboard,
       l: frame.minX(),
@@ -39,13 +39,16 @@ function prependNumbersToArtboards(context) {
       b: frame.maxY()
     });
 
-    uniqueYPositions.add(Number(frame.minY()));
+    var t = frame.minY();
+    if (!(t in artboardsAtYPosition)) {
+      artboardsAtYPosition[t] = 0;
+      ++numRows;
+    }
+    ++artboardsAtYPosition[t];
   }
 
-  let numRows = uniqueYPositions.size;
-
   // sort artboards top-down then left-right
-  artboardMetas.sort((a, b) => {
+  artboardMetas.sort(function(a, b) {
     if (a.t == b.t) {
       return a.l - b.l;
     } else {
@@ -54,55 +57,34 @@ function prependNumbersToArtboards(context) {
   });
 
   // update artboard names
-  let row = 0;
-  let col = -1;
-  let subCol = 0;
-  let lastMetaT = null;
-  for (let i = 0; i < artboardMetas.length; i++) {
-    let meta = artboardMetas[i];
+  var row = 0;
+  var col = 0;
+  for (var i = 0; i < artboardMetas.length; i++) {
+    var meta = artboardMetas[i];
+
+    // create prefix (e.g. "301")
+
+    var prefix = (row) + '.' + ((col < 10) ?  '0' : '') + col; // creando 100-101,,,111
+    //if (numRows >= 10 && row < 9) { // si el total de ROWS es mayor a 10
+    //  prefix = '0' + prefix;
+    //}
+
+    // complete the 4 digit-code to avoid braking on 1xxx
+    if(row < 10) prefix = '0' + prefix;
 
     // strip off current digits and dots
-    let fullName = meta.artboard.name();
-    let currentNamePath = fullName.substring(0, fullName.lastIndexOf('/') + 1);
-    let currentName = fullName.slice(currentNamePath.length);
-    let [_, currentNumber, baseName] = currentName.match(/^([\d.]*)[_-]?(.*)$/);
-
-    if (lastMetaT === null || lastMetaT != meta.t) {
-      lastMetaT = meta.t;
-      ++row;
-      subCol = 0;
-      col = -1;
-    }
-
-    if (currentNumber.indexOf('.') >= 0) {
-      // in a subcol
-      ++subCol;
-      col = Math.max(0, col);
-    } else {
-      // not in a subcol
-      if (subCol >= 0) {
-        // no longer in a subcol
-        subCol = 0;
-      }
-
-      ++col;
-    }
-
-    // create prefix (e.g. "301" and "415.4" with subflows)
-    let prefix = zeropad(row, numRows >= 10 ? 2 : 1)
-        + zeropad(col, 2)
-        + (subCol > 0 ? '.' + (subCol) : '');
+    var fullName = meta.artboard.name();
+    var currentNamePath = fullName.substring(0, fullName.lastIndexOf('/') + 1);
+    var currentName = fullName.slice(currentNamePath.length);
+    currentName = currentName.replace(/^.*[_]/, '').replace(/\s/g, '.').toLowerCase(); // added remove spaces + lowercase
 
     // add prefix to the name
-    meta.artboard.setName(`${currentNamePath}${prefix}_${baseName}`);
-  }
-}
+    meta.artboard.setName(currentNamePath + prefix + '_' +  currentName);
 
-function zeropad(s, length) {
-  s = String(s);
-  s = s || '';
-  while (s.length < length) {
-    s = '0' + s;
+    ++col;
+    if (artboardsAtYPosition[meta.t] <= col) {
+      ++row;
+      col = 0;
+    }
   }
-  return s;
 }
