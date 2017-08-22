@@ -30,12 +30,18 @@ the current position of each artboard.
 
 ## Prefix Artboard Names With Numbers
 
-Prefixes each artboard in your page with a number such as 102, 300, 517, etc. based on X and Y position.
-This is designed to be used with the "Rearrange Artboards Into Grid" command. The first digit is the row,
-the second 2 digits are the column, like so:
+Prefixes each artboard in your page with a number such as 01.02, 03.00, 05.17, etc. based on X and Y position.
+
+This is designed to be used with the "Rearrange Artboards Into Grid" command. The first two digit are the row, the second 2 digits are the column, like so:
 
 ```
-100 101 102
-200 201
-300 301 302 303 304
+00.00 00.01 00.02
+
+01.00 01.01 00.02
+
+02.00 02.01 00.02
 ```
+
+## Magic
+
+With these command you can trigger both 'Rearrange Artboards Into Grid' and 'Prefix Artboard Names With Numers' in one single shortcut with '⌘ + <'
