@@ -76,7 +76,7 @@ function prependNumbersToArtboards(context) {
     var fullName = meta.artboard.name();
     var currentNamePath = fullName.substring(0, fullName.lastIndexOf('/') + 1);
     var currentName = fullName.slice(currentNamePath.length);
-    currentName = currentName.replace(/^.*[_]/, '').replace(/\s/g, '.').toLowerCase(); // added remove spaces + lowercase
+    currentName = currentName.replace(/^.*[_]/, '').replace(/\s/g, '.'); // added remove spaces + lowercase
 
     // add prefix to the name
     meta.artboard.setName(currentNamePath + prefix + '_' +  currentName);
