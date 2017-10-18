@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Google Inc.
+ * Copyright 2017 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,24 +14,19 @@
  * limitations under the License.
  */
 
-@import 'util.js'
+const util = require('./sketch-util');
 
 
-function onRun(context) {
+export default function(context) {
   if (context.selection.count() == 0) {
     context.document.showMessage('Please select some objects.');
     return;
   }
 
-  selectArtboardsContainingSelection(context);
-}
-
-
-function selectArtboardsContainingSelection(context) {
   var selectedArtboards = [];
   for (var i = 0; i < context.selection.count(); i++) {
     var layer = context.selection.objectAtIndex(i);
-    while (layer && !isArtboard(layer)) {
+    while (layer && !util.isArtboard(layer)) {
       layer = layer.parentGroup();
     }
 
@@ -42,5 +37,5 @@ function selectArtboardsContainingSelection(context) {
     }
   }
 
-  setSelection(context, selectedArtboards);
+  util.setSelection(context, selectedArtboards);
 }

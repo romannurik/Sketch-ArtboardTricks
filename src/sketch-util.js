@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Google Inc.
+ * Copyright 2017 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,11 +14,19 @@
  * limitations under the License.
  */
 
-function isArtboard(layer) {
+export function isArtboard(layer) {
   return layer instanceof MSArtboardGroup || layer instanceof MSSymbolMaster;
 }
 
-function setSelection(context, layers) {
+export function setSelection(context, layers) {
   context.document.currentPage().changeSelectionBySelectingLayers(null);
   layers.forEach(l => l.select_byExpandingSelection_(true, true));
+}
+
+export function nsArrayToArray(nsArray) {
+  let arr = [];
+  for (let i = 0; i < nsArray.count(); i++) {
+    arr.push(nsArray.objectAtIndex(i));
+  }
+  return arr;
 }
