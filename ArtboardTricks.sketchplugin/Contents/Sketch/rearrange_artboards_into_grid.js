@@ -161,7 +161,7 @@ function rearrangeArtboardsIntoGrid(context) {
   artboards.reverse();
   artboards.forEach(function(a) {
     page.removeLayer(a);
-    page.addLayers(NSArray.arrayWithObjects(a));
+    page.addLayers(NSArray.arrayWithObject(a));
   });
 }
 
