@@ -21,12 +21,11 @@ This is useful for organizing your artboards into distinct "flows", where each r
 
 ![Demo Screencap](https://raw.githubusercontent.com/romannurik/Sketch-ArtboardTricks/master/art/rearrange.gif)
 
-Rows are 400px apart and columns are 100px apart (might be configurable in the future).
+Rows are 400px apart and columns are 100px apart by default (configurable per page).
 
 The command also re-orders the list of artboards in the sidenav according to its position. 
 
-Note that there are no current configuration options, everything is automatic. The arrangement is based on
-the current position of each artboard.
+Note that the arrangement is based on the current position of each artboard.
 
 ## Prefix Artboard Names With Numbers
 
