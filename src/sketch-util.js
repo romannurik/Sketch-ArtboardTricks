@@ -30,3 +30,12 @@ export function nsArrayToArray(nsArray) {
   }
   return arr;
 }
+
+export function zeropad(s, length = 1) {
+  s = String(s);
+  s = s || '';
+  while (s.length < length) {
+    s = '0' + s;
+  }
+  return s;
+}

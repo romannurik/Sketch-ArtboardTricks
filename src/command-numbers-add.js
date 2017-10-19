@@ -88,22 +88,12 @@ export default function(context) {
     }
 
     // create prefix (e.g. "301" and "415.4" with subflows)
-    let prefix = zeropad(row, numRows >= 10 ? 2 : 1)
+    let prefix = util.zeropad(row, numRows >= 10 ? 2 : 1)
         + currentPrefs.rowColSeparator
-        + zeropad(col, 2)
+        + util.zeropad(col, 2)
         + (subCol > 0 ? '.' + (subCol) : '');
 
     // add prefix to the name
     meta.artboard.setName(`${currentNamePath}${prefix}${currentPrefs.numberTitleSeparator}${baseName}`);
   }
-}
-
-
-function zeropad(s, length) {
-  s = String(s);
-  s = s || '';
-  while (s.length < length) {
-    s = '0' + s;
-  }
-  return s;
 }
