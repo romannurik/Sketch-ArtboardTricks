@@ -47,22 +47,19 @@ const WIDGET_CONFIGS = [
 export default function(context) {
   let page = context.document.currentPage();
 
-  let defaultPrefs = Object.assign({}, prefs.getUserPrefs(context), prefs.getDefaultPrefs());
-  let pagePrefs = prefs.getPagePrefs(context, page);
+  let defaultPrefs = {};
+  let pagePrefs = {};
+  let invalidatePrefs = () => {
+    defaultPrefs = Object.assign({}, prefs.getDefaultPrefs(), prefs.getUserPrefs(context));
+    pagePrefs = prefs.getPagePrefs(context, page);;
+  };
+
+  invalidatePrefs();
 
   let alert = NSAlert.alloc().init();
 
-  alert.setMessageText(`Artboard Tricks Preferences for page '${page.name()}'`);
-
-  alert.addButtonWithTitle('OK');
-  alert.addButtonWithTitle('Cancel');
-
-  delegate.setOnButtonClick(alert.addButtonWithTitle('Set Defaults'), () => {
-    context.document.showMessage('hey');
-  });
-
+  // set up alert widgets
   let stackView = NSStackView.alloc().init();
-
   let widgets = WIDGET_CONFIGS.map(config => addPrefWidget(config));
 
   stackView.setSpacing(10);
@@ -71,21 +68,36 @@ export default function(context) {
   stackView.setAlignment(NSLayoutAttributeLeft);
   stackView.setTranslatesAutoresizingMaskIntoConstraints(true);
   stackView.updateConstraintsForSubtreeIfNeeded();
-
   alert.setAccessoryView(stackView);
   alert.window().setAutorecalculatesKeyViewLoop(true);
   alert.window().setInitialFirstResponder(widgets[0].fieldView);
 
+  // set up alert basics
+  alert.setMessageText(`Artboard Tricks Preferences for page '${page.name()}'`);
+  alert.addButtonWithTitle('OK');
+  alert.addButtonWithTitle('Cancel');
+  delegate.setOnButtonClick(alert.addButtonWithTitle('Set Defaults'), () => {
+    prefs.setUserPrefs(context, readWidgetValues());
+    prefs.setPagePrefs(context, page, {}); // remove page prefs, i.e. use defaults
+    invalidatePrefs();
+    widgets.forEach(widget => widget.update());
+    context.document.showMessage('Saved default preferences.');
+  });
+
   if (alert.runModal() == NSAlertFirstButtonReturn) {
-    let savePrefs = {};
+    prefs.setPagePrefs(context, page, readWidgetValues());
+    context.document.showMessage('Saved preferences.');
+  }
+
+  function readWidgetValues() {
+    let prefs = {};
     widgets.forEach(widget => {
       let v = widget.getStorableValue();
       if (v !== null) {
-        savePrefs[widget.config.key] = v;
+        prefs[widget.config.key] = v;
       }
     });
-    prefs.setPagePrefs(context, page, savePrefs);
-    context.document.showMessage('Saved preferences.');
+    return prefs;
   }
 
   // TODO: refactor
@@ -93,8 +105,6 @@ export default function(context) {
     let displayValueForPlaceholder = config.onDisplayValueForPlaceholder || (s => s);
 
     let fieldView = NSTextField.alloc().initWithFrame(CGRectMake(0, 0, 200, 25));
-    fieldView.cell().setPlaceholderString(String(displayValueForPlaceholder(defaultPrefs[config.key])));
-    fieldView.setStringValue(String(pagePrefs[config.key] || ''));
 
     let labelView = NSTextField.labelWithString(config.label);
     labelView.setFont(NSFont.labelFontOfSize(11));
@@ -102,13 +112,21 @@ export default function(context) {
     stackView.addView_inGravity_(labelView, NSStackViewGravityTop);
     stackView.addView_inGravity_(fieldView, NSStackViewGravityTop);
 
+    let updateFieldView = () => {
+      fieldView.cell().setPlaceholderString(String(displayValueForPlaceholder(defaultPrefs[config.key])));
+      fieldView.setStringValue(String(pagePrefs[config.key] || ''));  
+    };
+
+    updateFieldView();
+
     return {
       config,
       fieldView,
       getStorableValue: () => {
         let v = String(fieldView.stringValue());
         return config.onParse ? config.onParse(v) : v;
-      }
+      },
+      update: () => updateFieldView(),
     };
   }
 }

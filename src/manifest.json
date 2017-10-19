@@ -23,7 +23,7 @@
     {
       "script" : "command-preferences.js",
       "handler" : "onRun",
-      "name" : "Set Artboard Spacing for Rearrange",
+      "name" : "Artboard Tricks Preferences",
       "identifier" : "command-preferences"
     },
     {
@@ -42,13 +42,14 @@
   ],
   "menu" : {
     "items" : [
-      "command-select-artboards",
-      "-",
       "command-rearrange-grid",
-      "command-preferences",
       "-",
       "command-numbers-add",
-      "command-numbers-remove"
+      "command-numbers-remove",
+      "-",
+      "command-select-artboards",
+      "-",
+      "command-preferences"      
     ],
     "title" : "Artboard Tricks"
   }
