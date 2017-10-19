@@ -47,7 +47,7 @@
     "title" : "Artboard Tricks"
   },
   "identifier" : "net.nurik.roman.sketch.artboardtricks",
-  "version" : "1.0.5",
+  "version" : "1.0.6",
   "compatibleVersion": 41,
   "description" : "A variety of tricks for dealing with artboards.",
   "authorEmail" : "roman@nurik.net",
