@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Google Inc.
+ * Copyright 2017 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,16 @@
  * limitations under the License.
  */
 
-@import 'util.js'
+const util = require('./sketch-util');
+const prefs = require('./prefs');
 
 
-function onRun(context) {
-  prependNumbersToArtboards(context);
-}
+export default function(context) {
+  let page = context.document.currentPage();
+  let currentPrefs = prefs.resolvePagePrefs(context, page);
 
-
-function prependNumbersToArtboards(context) {
   let artboardMetas = [];
-  let artboards = context.document.currentPage().artboards();
+  let artboards = page.artboards();
 
   // locally cache artboard positions
   let uniqueYPositions = new Set();
@@ -89,20 +88,12 @@ function prependNumbersToArtboards(context) {
     }
 
     // create prefix (e.g. "301" and "415.4" with subflows)
-    let prefix = zeropad(row, numRows >= 10 ? 2 : 1)
-        + zeropad(col, 2)
+    let prefix = util.zeropad(row, numRows >= 10 ? 2 : 1)
+        + currentPrefs.rowColSeparator
+        + util.zeropad(col, 2)
         + (subCol > 0 ? '.' + (subCol) : '');
 
     // add prefix to the name
-    meta.artboard.setName(`${currentNamePath}${prefix}_${baseName}`);
+    meta.artboard.setName(`${currentNamePath}${prefix}${currentPrefs.numberTitleSeparator}${baseName}`);
   }
-}
-
-function zeropad(s, length) {
-  s = String(s);
-  s = s || '';
-  while (s.length < length) {
-    s = '0' + s;
-  }
-  return s;
 }

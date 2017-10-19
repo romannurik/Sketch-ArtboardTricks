@@ -1,0 +1,31 @@
+{
+	"name": "sketch-artboardtricks",
+	"version": "1.0.6",
+	"description": "A Sketch plugin containing variety of tricks for dealing with artboards.",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"build": "skpm build",
+		"publish": "skpm publish"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/romannurik/Sketch-ArtboardTricks.git"
+	},
+	"author": "Roman Nurik <roman@nurik.net>",
+	"license": "Apache-2.0",
+	"bugs": {
+		"url": "https://github.com/romannurik/Sketch-ArtboardTricks/issues"
+	},
+	"homepage": "https://github.com/romannurik/Sketch-ArtboardTricks#readme",
+	"engines": {
+		"sketch": ">=3.0"
+	},
+	"devDependencies": {
+		"skpm": "^0.10.5"
+	},
+	"skpm": {
+		"manifest": "src/manifest.json",
+		"main": "plugin.sketchplugin"
+	}
+}

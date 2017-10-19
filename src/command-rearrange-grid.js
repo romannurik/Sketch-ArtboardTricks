@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Google Inc.
+ * Copyright 2017 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,23 +14,13 @@
  * limitations under the License.
  */
 
-@import 'util.js'
+const util = require('./sketch-util');
+const prefs = require('./prefs');
 
 
-const DEFAULT_X_SPACING = 100;
-const DEFAULT_Y_SPACING = 400;
-const SPACING_LAYER_KEY = 'artboard_tricks_spacing';
-
-
-function onRun(context) {
-  rearrangeArtboardsIntoGrid(context);
-}
-
-
-function rearrangeArtboardsIntoGrid(context) {
+export default function(context) {
   var page = context.document.currentPage();
-
-  var spacing = getSpacingForPage(context, page);
+  var currentPrefs = prefs.resolvePagePrefs(context, page);
 
   var artboardMetas = [];
   var artboards = page.artboards();
@@ -144,9 +134,9 @@ function rearrangeArtboardsIntoGrid(context) {
       var frame = metasInRow[c].artboard.frame();
       frame.setX(x);
       frame.setY(y);
-      x += frame.width() + spacing.xSpacing;
+      x += frame.width() + currentPrefs.xSpacing;
     }
-    y += rowHeights[r] + spacing.ySpacing;
+    y += rowHeights[r] + currentPrefs.ySpacing;
   }
 
   // update artboard position in the sidebar
@@ -163,38 +153,4 @@ function rearrangeArtboardsIntoGrid(context) {
     page.removeLayer(a);
     page.addLayers(NSArray.arrayWithObject(a));
   });
-}
-
-
-function getSpacingForPage(context, page) {
-  return context.command.valueForKey_onLayer_(SPACING_LAYER_KEY, page) || {
-    xSpacing: DEFAULT_X_SPACING,
-    ySpacing: DEFAULT_Y_SPACING
-  };
-}
-
-
-function onSetCustomSpacing(context) {
-  var page = context.document.currentPage();
-
-  var currentSpacing = getSpacingForPage(context, page);
-
-  var spacingStr = context.document.askForUserInput_initialValue(
-      'Enter comma-separated X and Y spacing.', currentSpacing.xSpacing + ', ' + currentSpacing.ySpacing);
-  var spacings = spacingStr.split(/,/g);
-  if (spacings.length >= 2) {
-    var spacing = {
-      xSpacing: parseInt(spacings[0], 10),
-      ySpacing: parseInt(spacings[1], 10)
-    };
-
-    if (spacing.xSpacing && spacing.ySpacing) {
-      // success
-      context.command.setValue_forKey_onLayer_(spacing, SPACING_LAYER_KEY, page);
-      context.document.showMessage('Saved spacing for rearrange.');
-      return;
-    }
-  }
-
-  context.document.showMessage('Invalid input: ' + spacingStr);
 }
