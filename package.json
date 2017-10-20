@@ -1,6 +1,6 @@
 {
 	"name": "sketch-artboardtricks",
-	"version": "1.0.7",
+	"version": "1.0.8",
 	"description": "A Sketch plugin containing variety of tricks for dealing with artboards.",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
