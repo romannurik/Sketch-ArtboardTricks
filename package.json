@@ -25,6 +25,7 @@
 	},
 	"skpm": {
 		"manifest": "src/manifest.json",
-		"main": "ArtboardTricks.sketchplugin"
+		"main": "ArtboardTricks.sketchplugin",
+		"name": "Artboard Tricks"
 	}
 }
