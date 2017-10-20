@@ -5,7 +5,17 @@ Contains a set of artboard tricks for Sketch. See below for more.
 
 # Installation
 
-Drop the .sketchplugin folder into your Sketch plugins folder (**Plugins > Reveal Plugins Folder** to find it).
+You can install the plugin with either Sketch Runner or Sketchpacks.
+
+<a href="http://bit.ly/SketchRunnerWebsite">
+  <img src="http://bit.ly/RunnerBadgeBlue" width="160">
+</a>
+
+<a href="https://sketchpacks.com/romannurik/Sketch-ArtboardTricks/install">
+  <img src="http://sketchpacks-com.s3.amazonaws.com/assets/badges/sketchpacks-badge-install.png" width="160" alt="Install Artboard Tricks with Sketchpacks">
+</a>
+
+Alternatively, just drop the `.sketchplugin` folder into your Sketch plugins folder (**Plugins > Manage Plugins > (settings gear) > Reveal Plugins Folder** to find it).
 
 # The Commands
 
