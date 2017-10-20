@@ -1,5 +1,4 @@
 # Artboard Tricks plugin for Sketch
-[![Download from Sketchpacks.com](https://badges.sketchpacks.com/plugins/net.nurik.roman.sketch.artboardtricks/version.svg)](https://api.sketchpacks.com/v1/plugins/net.nurik.roman.sketch.artboardtricks/download) [![Compatible Sketch Version](https://badges.sketchpacks.com/plugins/net.nurik.roman.sketch.artboardtricks/compatibility.svg)](https://sketchpacks.com/romannurik/Sketch-ArtboardTricks)
 
 Contains a set of artboard tricks for Sketch. See below for more.
 
@@ -18,11 +17,6 @@ You can install the plugin with either Sketch Runner or Sketchpacks.
 Alternatively, just drop the `.sketchplugin` folder into your Sketch plugins folder (**Plugins > Manage Plugins > (settings gear) > Reveal Plugins Folder** to find it).
 
 # The Commands
-
-## Select Artboards Containing Selection
-
-Selects the artboard(s) that contain your selection. Useful if you want to select multiple artboards quickly
-(click and drag to select a bunch of layers, then run this script to select the container artboards).
 
 ## Rearrange Artboards Into Grid
 
@@ -48,3 +42,8 @@ the second 2 digits are the column, like so:
 200 201
 300 301 302 303 304
 ```
+
+## Select Artboards Containing Selection
+
+Selects the artboard(s) that contain your selection. Useful if you want to select multiple artboards quickly
+(click and drag to select a bunch of layers, then run this script to select the container artboards).
