@@ -1,8 +1,7 @@
 {
 	"name": "sketch-artboardtricks",
-	"version": "1.0.6",
+	"version": "1.0.7",
 	"description": "A Sketch plugin containing variety of tricks for dealing with artboards.",
-	"main": "index.js",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"build": "skpm build",
@@ -26,6 +25,6 @@
 	},
 	"skpm": {
 		"manifest": "src/manifest.json",
-		"main": "plugin.sketchplugin"
+		"main": "ArtboardTricks.sketchplugin"
 	}
 }
