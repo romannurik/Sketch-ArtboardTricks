@@ -101,10 +101,10 @@ class PreferencesDialog {
     parentStackView.addView_inGravity_(labelView, NSStackViewGravityTop);
     parentStackView.addView_inGravity_(fieldView, NSStackViewGravityTop);
 
-    function updateFieldView() {
+    let updateFieldView = () => {
       fieldView.cell().setPlaceholderString(String(displayValueForPlaceholder(this.defaultPrefs[config.key])));
       fieldView.setStringValue(String(this.pagePrefs[config.key] || ''));
-    }
+    };
 
     updateFieldView();
 

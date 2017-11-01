@@ -177,6 +177,8 @@ var PreferencesDialog = function () {
     key: 'buildPrefWidget',
     value: function () {
       function buildPrefWidget(parentStackView, config) {
+        var _this2 = this;
+
         var displayValueForPlaceholder = config.onDisplayValueForPlaceholder || function (s) {
           return s;
         };
@@ -186,10 +188,14 @@ var PreferencesDialog = function () {
         parentStackView.addView_inGravity_(labelView, NSStackViewGravityTop);
         parentStackView.addView_inGravity_(fieldView, NSStackViewGravityTop);
 
-        function updateFieldView() {
-          fieldView.cell().setPlaceholderString(String(displayValueForPlaceholder(this.defaultPrefs[config.key])));
-          fieldView.setStringValue(String(this.pagePrefs[config.key] || ''));
-        }
+        var updateFieldView = function () {
+          function updateFieldView() {
+            fieldView.cell().setPlaceholderString(String(displayValueForPlaceholder(_this2.defaultPrefs[config.key])));
+            fieldView.setStringValue(String(_this2.pagePrefs[config.key] || ''));
+          }
+
+          return updateFieldView;
+        }();
 
         updateFieldView();
 
