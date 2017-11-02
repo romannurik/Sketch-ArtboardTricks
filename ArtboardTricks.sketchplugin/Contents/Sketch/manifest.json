@@ -64,7 +64,7 @@
     ],
     "title": "Artboard Tricks"
   },
-  "version": "1.10.0",
+  "version": "1.10.2",
   "description": "A Sketch plugin containing variety of tricks for dealing with artboards.",
   "homepage": "https://github.com/romannurik/Sketch-ArtboardTricks#readme",
   "disableCocoaScriptPreprocessor": true
