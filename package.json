@@ -1,11 +1,12 @@
 {
 	"name": "sketch-artboardtricks",
-	"version": "1.0.9",
+	"version": "1.10.0",
 	"description": "A Sketch plugin containing variety of tricks for dealing with artboards.",
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1",
-		"build": "skpm build",
-		"publish": "skpm publish"
+		"build": "skpm-build && mkdir -p ArtboardTricks.sketchplugin/Contents/Resources && cp -rf resources/*.png ArtboardTricks.sketchplugin/Contents/Resources",
+		"watch": "skpm-build --watch",
+		"start": "skpm-build --watch --run",
+		"postinstall": "npm run build && skpm-link"
 	},
 	"repository": {
 		"type": "git",
@@ -21,7 +22,7 @@
 		"sketch": ">=3.0"
 	},
 	"devDependencies": {
-		"skpm": "^0.10.5"
+		"@skpm/builder": "^0.1.4"
 	},
 	"skpm": {
 		"manifest": "src/manifest.json",

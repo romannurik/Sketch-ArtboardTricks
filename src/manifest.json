@@ -12,33 +12,43 @@
       "handler" : "onRun",
       "shortcut" : "ctrl cmd option s",
       "name" : "Select Artboards Containing Selection",
-      "identifier" : "command-select-artboards"
+      "identifier" : "command-select-artboards",
+      "description" : "For each selected layer, selects its containing artboard instead.",
+      "icon" : "icon_select_artboard.png"
     },
     {
       "script" : "command-rearrange-grid.js",
       "handler" : "onRun",
       "shortcut" : "ctrl cmd option r",
       "name" : "Rearrange Artboards Into Grid",
-      "identifier" : "command-rearrange-grid"
+      "identifier" : "command-rearrange-grid",
+      "description" : "Rearranges artboards on the current page into rows, based on the artboard's current position.",
+      "icon" : "icon_rearrange.png"
     },
     {
       "script" : "command-preferences.js",
       "handler" : "onRun",
       "name" : "Artboard Tricks Preferences",
-      "identifier" : "command-preferences"
+      "identifier" : "command-preferences",
+      "description" : "Customize how Artboard Tricks behaves.",
+      "icon" : "icon_preferences.png"
     },
     {
       "script" : "command-numbers-add.js",
       "handler" : "onRun",
       "shortcut" : "ctrl cmd option n",
       "name" : "Prefix Artboard Names With Numbers",
-      "identifier" : "command-numbers-add"
+      "identifier" : "command-numbers-add",
+      "description" : "Adds number prefixes to artboards on the current page based on their position (best used in conjunction with the Rearrange command).",
+      "icon" : "icon_prefix_add.png"
     },
     {
       "script" : "command-numbers-remove.js",
       "handler" : "onRun",
       "name" : "Remove Artboard Number Prefixes",
-      "identifier" : "command-numbers-remove"
+      "identifier" : "command-numbers-remove",
+      "description" : "Removes number prefixes from artboards on the current page.",
+      "icon" : "icon_prefix_remove.png"
     }
   ],
   "menu" : {
