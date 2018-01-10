@@ -14,33 +14,18 @@
  * limitations under the License.
  */
 
-const util = require('./sketch-util');
-const prefs = require('./prefs');
+import * as util from './sketch-util';
+import * as common from './common';
+import * as prefs from './prefs';
 
 
 export default function(context) {
   let page = context.document.currentPage();
   let currentPrefs = prefs.resolvePagePrefs(context, page);
+  let artboardMetas = common.generateArtboardMetas(
+      common.collectTargetArtboards(context));
 
-  let artboardMetas = [];
-  let artboards = page.artboards();
-
-  // locally cache artboard positions
-  let uniqueYPositions = new Set();
-  for (let i = 0; i < artboards.count(); i++) {
-    let artboard = artboards.objectAtIndex(i);
-    let frame = artboard.frame();
-    artboardMetas.push({
-      artboard: artboard,
-      l: frame.minX(),
-      t: frame.minY(),
-      r: frame.maxX(),
-      b: frame.maxY()
-    });
-
-    uniqueYPositions.add(Number(frame.minY()));
-  }
-
+  let uniqueYPositions = new Set(artboardMetas.map(meta => meta.t));
   let numRows = uniqueYPositions.size;
 
   // sort artboards top-down then left-right
@@ -57,9 +42,7 @@ export default function(context) {
   let col = -1;
   let subCol = 0;
   let lastMetaT = null;
-  for (let i = 0; i < artboardMetas.length; i++) {
-    let meta = artboardMetas[i];
-
+  artboardMetas.forEach(meta => {
     // strip off current digits and dots
     let fullName = meta.artboard.name();
     let currentNamePath = fullName.substring(0, fullName.lastIndexOf('/') + 1);
@@ -95,5 +78,5 @@ export default function(context) {
 
     // add prefix to the name
     meta.artboard.setName(`${currentNamePath}${prefix}${currentPrefs.numberTitleSeparator}${baseName}`);
-  }
+  });
 }

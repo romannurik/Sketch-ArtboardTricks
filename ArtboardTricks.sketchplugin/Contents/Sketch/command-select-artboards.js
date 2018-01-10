@@ -82,40 +82,20 @@ exports['default'] = function (context) {
     return;
   }
 
-  var selectedArtboards = [];
-  for (var i = 0; i < context.selection.count(); i++) {
-    var layer = context.selection.objectAtIndex(i);
-    while (layer && !util.isArtboard(layer)) {
-      layer = layer.parentGroup();
-    }
+  var selectedArtboards = new Set(util.arrayFromNSArray(context.selection).map(function (layer) {
+    return util.getContainingArtboard(layer);
+  }).filter(function (layer) {
+    return !!layer;
+  }));
 
-    if (layer) {
-      if (selectedArtboards.indexOf(layer) < 0) {
-        selectedArtboards.push(layer);
-      }
-    }
-  }
-
-  util.setSelection(context, selectedArtboards);
+  util.setSelection(context, Array.from(selectedArtboards));
 };
 
-/*
- * Copyright 2017 Google Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+var _sketchUtil = __webpack_require__(1);
 
-var util = __webpack_require__(1);
+var util = _interopRequireWildcard(_sketchUtil);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
 
 /***/ }),
 /* 1 */
@@ -125,8 +105,9 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.isArtboard = isArtboard;
+exports.getContainingArtboard = getContainingArtboard;
 exports.setSelection = setSelection;
-exports.nsArrayToArray = nsArrayToArray;
+exports.arrayFromNSArray = arrayFromNSArray;
 exports.zeropad = zeropad;
 /*
  * Copyright 2017 Google Inc.
@@ -148,6 +129,14 @@ function isArtboard(layer) {
   return layer instanceof MSArtboardGroup || layer instanceof MSSymbolMaster;
 }
 
+function getContainingArtboard(layer) {
+  while (layer && !isArtboard(layer)) {
+    layer = layer.parentGroup();
+  }
+
+  return layer;
+}
+
 function setSelection(context, layers) {
   context.document.currentPage().changeSelectionBySelectingLayers(null);
   layers.forEach(function (l) {
@@ -155,7 +144,7 @@ function setSelection(context, layers) {
   });
 }
 
-function nsArrayToArray(nsArray) {
+function arrayFromNSArray(nsArray) {
   var arr = [];
   for (var i = 0; i < nsArray.count(); i++) {
     arr.push(nsArray.objectAtIndex(i));

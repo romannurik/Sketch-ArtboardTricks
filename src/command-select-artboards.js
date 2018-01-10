@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-const util = require('./sketch-util');
+import * as util from './sketch-util';
 
 
 export default function(context) {
@@ -23,19 +23,10 @@ export default function(context) {
     return;
   }
 
-  var selectedArtboards = [];
-  for (var i = 0; i < context.selection.count(); i++) {
-    var layer = context.selection.objectAtIndex(i);
-    while (layer && !util.isArtboard(layer)) {
-      layer = layer.parentGroup();
-    }
+  let selectedArtboards = new Set(
+      util.arrayFromNSArray(context.selection)
+          .map(layer => util.getContainingArtboard(layer))
+          .filter(layer => !!layer));
 
-    if (layer) {
-      if (selectedArtboards.indexOf(layer) < 0) {
-        selectedArtboards.push(layer);
-      }
-    }
-  }
-
-  util.setSelection(context, selectedArtboards);
+  util.setSelection(context, Array.from(selectedArtboards));
 }

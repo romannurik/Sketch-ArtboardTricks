@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 
-const util = require('./sketch-util');
+import * as util from './sketch-util';
+import * as common from './common';
 
 
 export default function(context) {
-  let artboards = context.document.currentPage().artboards();
+  let artboards = common.collectTargetArtboards(context);
 
   // update artboard names
-  for (let i = 0; i < artboards.count(); i++) {
-    let artboard = artboards.objectAtIndex(i);
-
+  artboards.forEach(artboard => {
     // strip off current digits and dots
     let fullName = artboard.name();
     let currentNamePath = fullName.substring(0, fullName.lastIndexOf('/') + 1);
@@ -32,5 +31,5 @@ export default function(context) {
 
     // reset the name
     artboard.setName(currentNamePath + currentName);
-  }
+  });
 }

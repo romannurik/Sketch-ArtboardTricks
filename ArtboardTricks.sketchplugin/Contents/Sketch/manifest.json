@@ -2,14 +2,12 @@
   "identifier": "net.nurik.roman.sketch.artboardtricks",
   "authorEmail": "roman@nurik.net",
   "author": "Roman Nurik",
-  "appcast": "https://api.sketchpacks.com/v1/plugins/net.nurik.roman.sketch.artboardtricks/appcast",
   "compatibleVersion": 41,
   "bundleVersion": 1,
   "name": "Artboard Tricks",
   "commands": [
     {
       "script": "command-select-artboards.js",
-      "handler": "onRun",
       "shortcut": "ctrl cmd option s",
       "name": "Select Artboards Containing Selection",
       "identifier": "command-select-artboards",
@@ -18,7 +16,6 @@
     },
     {
       "script": "command-rearrange-grid.js",
-      "handler": "onRun",
       "shortcut": "ctrl cmd option r",
       "name": "Rearrange Artboards Into Grid",
       "identifier": "command-rearrange-grid",
@@ -27,7 +24,6 @@
     },
     {
       "script": "command-preferences.js",
-      "handler": "onRun",
       "name": "Artboard Tricks Preferences",
       "identifier": "command-preferences",
       "description": "Customize how Artboard Tricks behaves.",
@@ -35,7 +31,6 @@
     },
     {
       "script": "command-numbers-add.js",
-      "handler": "onRun",
       "shortcut": "ctrl cmd option n",
       "name": "Prefix Artboard Names With Numbers",
       "identifier": "command-numbers-add",
@@ -44,7 +39,6 @@
     },
     {
       "script": "command-numbers-remove.js",
-      "handler": "onRun",
       "name": "Remove Artboard Number Prefixes",
       "identifier": "command-numbers-remove",
       "description": "Removes number prefixes from artboards on the current page.",
@@ -67,5 +61,6 @@
   "version": "1.10.2",
   "description": "A Sketch plugin containing variety of tricks for dealing with artboards.",
   "homepage": "https://github.com/romannurik/Sketch-ArtboardTricks#readme",
-  "disableCocoaScriptPreprocessor": true
+  "disableCocoaScriptPreprocessor": true,
+  "appcast": "https://raw.githubusercontent.com/romannurik/Sketch-ArtboardTricks/master/.appcast.xml"
 }

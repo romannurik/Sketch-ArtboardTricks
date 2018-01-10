@@ -18,12 +18,20 @@ export function isArtboard(layer) {
   return layer instanceof MSArtboardGroup || layer instanceof MSSymbolMaster;
 }
 
+export function getContainingArtboard(layer) {
+  while (layer && !isArtboard(layer)) {
+    layer = layer.parentGroup();
+  }
+
+  return layer;
+}
+
 export function setSelection(context, layers) {
   context.document.currentPage().changeSelectionBySelectingLayers(null);
   layers.forEach(l => l.select_byExpandingSelection_(true, true));
 }
 
-export function nsArrayToArray(nsArray) {
+export function arrayFromNSArray(nsArray) {
   let arr = [];
   for (let i = 0; i < nsArray.count(); i++) {
     arr.push(nsArray.objectAtIndex(i));

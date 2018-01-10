@@ -65,42 +65,107 @@ var exports =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = 1);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
+/***/ (function(module, exports) {
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.isArtboard = isArtboard;
+exports.getContainingArtboard = getContainingArtboard;
+exports.setSelection = setSelection;
+exports.arrayFromNSArray = arrayFromNSArray;
+exports.zeropad = zeropad;
+/*
+ * Copyright 2017 Google Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+function isArtboard(layer) {
+  return layer instanceof MSArtboardGroup || layer instanceof MSSymbolMaster;
+}
+
+function getContainingArtboard(layer) {
+  while (layer && !isArtboard(layer)) {
+    layer = layer.parentGroup();
+  }
+
+  return layer;
+}
+
+function setSelection(context, layers) {
+  context.document.currentPage().changeSelectionBySelectingLayers(null);
+  layers.forEach(function (l) {
+    return l.select_byExpandingSelection_(true, true);
+  });
+}
+
+function arrayFromNSArray(nsArray) {
+  var arr = [];
+  for (var i = 0; i < nsArray.count(); i++) {
+    arr.push(nsArray.objectAtIndex(i));
+  }
+  return arr;
+}
+
+function zeropad(s) {
+  var length = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
+
+  s = String(s);
+  s = s || '';
+  while (s.length < length) {
+    s = '0' + s;
+  }
+  return s;
+}
+
+/***/ }),
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }(); /*
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          * Copyright 2017 Google Inc.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          *
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          * Licensed under the Apache License, Version 2.0 (the "License");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          * you may not use this file except in compliance with the License.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          * You may obtain a copy of the License at
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          *
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          *     http://www.apache.org/licenses/LICENSE-2.0
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          *
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          * Unless required by applicable law or agreed to in writing, software
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          * distributed under the License is distributed on an "AS IS" BASIS,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          * See the License for the specific language governing permissions and
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          * limitations under the License.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          */
 
 exports['default'] = function (context) {
   var page = context.document.currentPage();
   var currentPrefs = prefs.resolvePagePrefs(context, page);
+  var artboardMetas = common.generateArtboardMetas(common.collectTargetArtboards(context));
 
-  var artboardMetas = [];
-  var artboards = page.artboards();
-
-  // locally cache artboard positions
-  var uniqueYPositions = new Set();
-  for (var i = 0; i < artboards.count(); i++) {
-    var artboard = artboards.objectAtIndex(i);
-    var frame = artboard.frame();
-    artboardMetas.push({
-      artboard: artboard,
-      l: frame.minX(),
-      t: frame.minY(),
-      r: frame.maxX(),
-      b: frame.maxY()
-    });
-
-    uniqueYPositions.add(Number(frame.minY()));
-  }
-
+  var uniqueYPositions = new Set(artboardMetas.map(function (meta) {
+    return meta.t;
+  }));
   var numRows = uniqueYPositions.size;
 
   // sort artboards top-down then left-right
@@ -117,9 +182,7 @@ exports['default'] = function (context) {
   var col = -1;
   var subCol = 0;
   var lastMetaT = null;
-  for (var _i = 0; _i < artboardMetas.length; _i++) {
-    var meta = artboardMetas[_i];
-
+  artboardMetas.forEach(function (meta) {
     // strip off current digits and dots
     var fullName = meta.artboard.name();
     var currentNamePath = fullName.substring(0, fullName.lastIndexOf('/') + 1);
@@ -157,87 +220,81 @@ exports['default'] = function (context) {
 
     // add prefix to the name
     meta.artboard.setName('' + String(currentNamePath) + prefix + String(currentPrefs.numberTitleSeparator) + String(baseName));
-  }
+  });
 };
 
-/*
- * Copyright 2017 Google Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+var _sketchUtil = __webpack_require__(0);
 
-var util = __webpack_require__(1);
-var prefs = __webpack_require__(2);
+var util = _interopRequireWildcard(_sketchUtil);
+
+var _common = __webpack_require__(2);
+
+var common = _interopRequireWildcard(_common);
+
+var _prefs = __webpack_require__(3);
+
+var prefs = _interopRequireWildcard(_prefs);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
 
 /***/ }),
-/* 1 */
-/***/ (function(module, exports) {
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.isArtboard = isArtboard;
-exports.setSelection = setSelection;
-exports.nsArrayToArray = nsArrayToArray;
-exports.zeropad = zeropad;
-/*
- * Copyright 2017 Google Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+exports.collectTargetArtboards = collectTargetArtboards;
+exports.generateArtboardMetas = generateArtboardMetas;
 
-function isArtboard(layer) {
-  return layer instanceof MSArtboardGroup || layer instanceof MSSymbolMaster;
+var _sketchUtil = __webpack_require__(0);
+
+var util = _interopRequireWildcard(_sketchUtil);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
+
+/**
+ * Returns an array of all the artboards to target for grid operations
+ * (e.g. re-number, rearrange, etc)
+ */
+function collectTargetArtboards(context) {
+  if (context.selection.count()) {
+    // if there's an active selection inside an artboard, consider
+    // the artboards containing the selection the target
+    var selectedArtboards = util.arrayFromNSArray(context.selection).map(function (layer) {
+      return util.getContainingArtboard(layer);
+    }).filter(function (layer) {
+      return !!layer;
+    });
+    if (selectedArtboards.length) {
+      return selectedArtboards;
+    }
+  }
+
+  // otherwise, all artboards on the page
+  return util.arrayFromNSArray(context.document.currentPage().artboards());
 }
 
-function setSelection(context, layers) {
-  context.document.currentPage().changeSelectionBySelectingLayers(null);
-  layers.forEach(function (l) {
-    return l.select_byExpandingSelection_(true, true);
+/**
+ * Generates artboard metadata (primarily the object and frame)
+ */
+// Common functionality across related commands
+
+function generateArtboardMetas(artboards) {
+  return artboards.map(function (artboard) {
+    var frame = artboard.frame();
+    return {
+      artboard: artboard,
+      l: Number(frame.minX()),
+      t: Number(frame.minY()),
+      r: Number(frame.maxX()),
+      b: Number(frame.maxY())
+    };
   });
 }
 
-function nsArrayToArray(nsArray) {
-  var arr = [];
-  for (var i = 0; i < nsArray.count(); i++) {
-    arr.push(nsArray.objectAtIndex(i));
-  }
-  return arr;
-}
-
-function zeropad(s) {
-  var length = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
-
-  s = String(s);
-  s = s || '';
-  while (s.length < length) {
-    s = '0' + s;
-  }
-  return s;
-}
-
 /***/ }),
-/* 2 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 Object.defineProperty(exports, "__esModule", {
@@ -249,6 +306,16 @@ exports.getUserPrefs = getUserPrefs;
 exports.setUserPrefs = setUserPrefs;
 exports.getPagePrefs = getPagePrefs;
 exports.setPagePrefs = setPagePrefs;
+
+var _pluginUserPrefs = __webpack_require__(4);
+
+var pluginUserPrefs = _interopRequireWildcard(_pluginUserPrefs);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
+
+var PREFS_LAYER_KEY = 'artboard_tricks_spacing'; // for backward compatibility, don't change the key name
+
+
 /*
  * Copyright 2017 Google Inc.
  *
@@ -264,11 +331,6 @@ exports.setPagePrefs = setPagePrefs;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-var pluginUserPrefs = __webpack_require__(3);
-
-var PREFS_LAYER_KEY = 'artboard_tricks_spacing'; // for backward compatibility, don't change the key name
-
 
 var DEFAULTS = {
   xSpacing: 100,
@@ -306,7 +368,7 @@ function setPagePrefs(context, page, prefs) {
 }
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports) {
 
 Object.defineProperty(exports, "__esModule", {

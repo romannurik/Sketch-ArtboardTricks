@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-const delegate = require('./lib/delegate');
-const prefs = require('./prefs');
+import * as delegate from './lib/delegate';
+import * as prefs from './prefs';
 
 
 export default function(context) {

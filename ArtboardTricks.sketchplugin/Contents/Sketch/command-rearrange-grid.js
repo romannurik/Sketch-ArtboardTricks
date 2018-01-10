@@ -65,183 +65,20 @@ var exports =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = 1);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, exports, __webpack_require__) {
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-exports['default'] = function (context) {
-  var page = context.document.currentPage();
-  var currentPrefs = prefs.resolvePagePrefs(context, page);
-
-  var artboardMetas = [];
-  var artboards = page.artboards();
-
-  // locally cache artboard positions
-  for (var i = 0; i < artboards.count(); i++) {
-    var artboard = artboards.objectAtIndex(i);
-    var frame = artboard.frame();
-    artboardMetas.push({
-      artboard: artboard,
-      l: frame.minX(),
-      t: frame.minY(),
-      r: frame.maxX(),
-      b: frame.maxY()
-    });
-  }
-
-  var rowStarterArtboardMetas = [];
-
-  // find row-starting artboards
-  for (var i = 0; i < artboardMetas.length; i++) {
-    var leftmostInRow = true;
-
-    var meta = artboardMetas[i];
-    for (var j = 0; j < artboardMetas.length; j++) {
-      if (i == j) {
-        continue;
-      }
-
-      var otherMeta = artboardMetas[j];
-      if (otherMeta.l < meta.l) {
-        if (meta.t <= otherMeta.b && otherMeta.t <= meta.b) {
-          leftmostInRow = false;
-          break;
-        }
-      }
-    }
-
-    if (leftmostInRow) {
-      rowStarterArtboardMetas.push(meta);
-    }
-  }
-
-  // sort list of row-starting artboards
-  rowStarterArtboardMetas.sort(function (a, b) {
-    return a.t - b.t;
-  });
-
-  // start a list of artboards for each row
-  var rows = [];
-  var rowHeights = [];
-
-  for (var i = 0; i < rowStarterArtboardMetas.length; i++) {
-    rowStarterArtboardMetas[i].row = i;
-    rows[i] = [];
-    rows[i].push(rowStarterArtboardMetas[i]);
-    rowHeights[i] = rowStarterArtboardMetas[i].b - rowStarterArtboardMetas[i].t;
-  }
-
-  // assign all other artboards to a row by
-  // computing shortest distance between artboard vertical centers
-  for (var i = 0; i < artboardMetas.length; i++) {
-    var meta = artboardMetas[i];
-    if (rowStarterArtboardMetas.indexOf(meta) >= 0) {
-      continue;
-    }
-
-    for (var j = 0; j < rowStarterArtboardMetas.length; j++) {
-      var rowStarterMeta = rowStarterArtboardMetas[j];
-      rowStarterMeta._tmpDistance = Math.abs((rowStarterMeta.t + rowStarterMeta.b) / 2 - (meta.t + meta.b) / 2);
-    }
-
-    var tmp = rowStarterArtboardMetas.slice();
-    tmp.sort(function (a, b) {
-      return a._tmpDistance - b._tmpDistance;
-    });
-
-    var artboardRow = tmp[0].row;
-    rows[artboardRow].push(meta);
-
-    // update row height
-    rowHeights[artboardRow] = Math.max(rowHeights[artboardRow], meta.b - meta.t);
-  }
-
-  // sort each row by x position
-  for (var i = 0; i < rows.length; i++) {
-    var metasInRow = rows[i];
-    metasInRow.sort(function (a, b) {
-      return a.l - b.l;
-    });
-  }
-
-  // finally, arrange everything
-  var originX = 0,
-      originY = 0;
-  if (rows.length >= 1 && rows[0].length >= 1) {
-    originX = rows[0][0].artboard.frame().x();
-    originY = rows[0][0].artboard.frame().y();
-  }
-
-  // there's a weird thing in sketch where using 0,0 doesn't
-  // always result in the artboard actually being at 0,0
-  // see:
-  // https://github.com/romannurik/Sketch-ArtboardTricks/issues/1
-
-  var y = originY;
-  for (var r = 0; r < rows.length; r++) {
-    var metasInRow = rows[r];
-    var x = originX;
-    for (var c = 0; c < metasInRow.length; c++) {
-      var frame = metasInRow[c].artboard.frame();
-      frame.setX(x);
-      frame.setY(y);
-      x += frame.width() + currentPrefs.xSpacing;
-    }
-    y += rowHeights[r] + currentPrefs.ySpacing;
-  }
-
-  // update artboard position in the sidebar
-  var artboards = [];
-  for (var r = 0; r < rows.length; r++) {
-    var metasInRow = rows[r];
-    for (var c = 0; c < metasInRow.length; c++) {
-      artboards.push(metasInRow[c].artboard);
-    }
-  }
-
-  artboards.reverse();
-  artboards.forEach(function (a) {
-    page.removeLayer(a);
-    page.addLayers(NSArray.arrayWithObject(a));
-  });
-};
-
-/*
- * Copyright 2017 Google Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-var util = __webpack_require__(1);
-var prefs = __webpack_require__(2);
-
-/***/ }),
-/* 1 */
 /***/ (function(module, exports) {
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.isArtboard = isArtboard;
+exports.getContainingArtboard = getContainingArtboard;
 exports.setSelection = setSelection;
-exports.nsArrayToArray = nsArrayToArray;
+exports.arrayFromNSArray = arrayFromNSArray;
 exports.zeropad = zeropad;
 /*
  * Copyright 2017 Google Inc.
@@ -263,6 +100,14 @@ function isArtboard(layer) {
   return layer instanceof MSArtboardGroup || layer instanceof MSSymbolMaster;
 }
 
+function getContainingArtboard(layer) {
+  while (layer && !isArtboard(layer)) {
+    layer = layer.parentGroup();
+  }
+
+  return layer;
+}
+
 function setSelection(context, layers) {
   context.document.currentPage().changeSelectionBySelectingLayers(null);
   layers.forEach(function (l) {
@@ -270,7 +115,7 @@ function setSelection(context, layers) {
   });
 }
 
-function nsArrayToArray(nsArray) {
+function arrayFromNSArray(nsArray) {
   var arr = [];
   for (var i = 0; i < nsArray.count(); i++) {
     arr.push(nsArray.objectAtIndex(i));
@@ -290,7 +135,198 @@ function zeropad(s) {
 }
 
 /***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+exports['default'] = function (context) {
+  var page = context.document.currentPage();
+  var currentPrefs = prefs.resolvePagePrefs(context, page);
+  var artboardMetas = common.generateArtboardMetas(common.collectTargetArtboards(context));
+
+  // find row-starting artboards
+  var rowStarterArtboardMetas = [];
+  artboardMetas.forEach(function (meta) {
+    var leftmostInRow = true;
+    artboardMetas.forEach(function (otherMeta) {
+      if (meta === otherMeta) {
+        return;
+      }
+
+      if (otherMeta.l < meta.l) {
+        if (meta.t <= otherMeta.b && otherMeta.t <= meta.b) {
+          leftmostInRow = false;
+          return;
+        }
+      }
+    });
+
+    if (leftmostInRow) {
+      rowStarterArtboardMetas.push(meta);
+    }
+  });
+
+  // sort list of row-starting artboards
+  rowStarterArtboardMetas.sort(function (a, b) {
+    return a.t - b.t;
+  });
+
+  // start a list of artboards for each row
+  var rows = [];
+  var rowHeights = [];
+
+  rowStarterArtboardMetas.forEach(function (artboardMeta, i) {
+    artboardMeta.row = i;
+    rows[i] = [];
+    rows[i].push(artboardMeta);
+    rowHeights[i] = artboardMeta.b - artboardMeta.t;
+  });
+
+  // assign all other artboards to a row by
+  // computing shortest distance between artboard vertical centers
+  artboardMetas.forEach(function (meta) {
+    if (rowStarterArtboardMetas.indexOf(meta) >= 0) {
+      return;
+    }
+
+    rowStarterArtboardMetas.forEach(function (rowStarterMeta) {
+      rowStarterMeta._tmpDistance = Math.abs((rowStarterMeta.t + rowStarterMeta.b) / 2 - (meta.t + meta.b) / 2);
+    });
+
+    var tmp = rowStarterArtboardMetas.slice();
+    tmp.sort(function (a, b) {
+      return a._tmpDistance - b._tmpDistance;
+    });
+
+    var artboardRow = tmp[0].row;
+    rows[artboardRow].push(meta);
+
+    // update row height
+    rowHeights[artboardRow] = Math.max(rowHeights[artboardRow], meta.b - meta.t);
+  });
+
+  // sort each row by x position
+  rows.forEach(function (metasInRow) {
+    return metasInRow.sort(function (a, b) {
+      return a.l - b.l;
+    });
+  });
+
+  // finally, arrange everything
+  var originX = 0,
+      originY = 0;
+  if (rows.length >= 1 && rows[0].length >= 1) {
+    originX = rows[0][0].artboard.frame().x();
+    originY = rows[0][0].artboard.frame().y();
+  }
+
+  // there's a weird thing in sketch where using 0,0 doesn't
+  // always result in the artboard actually being at 0,0
+  // see:
+  // https://github.com/romannurik/Sketch-ArtboardTricks/issues/1
+
+  var y = originY;
+  rows.forEach(function (metasInRow, r) {
+    var x = originX;
+    metasInRow.forEach(function (meta) {
+      var frame = meta.artboard.frame();
+      frame.setX(x);
+      frame.setY(y);
+      x += frame.width() + currentPrefs.xSpacing;
+    });
+    y += rowHeights[r] + currentPrefs.ySpacing;
+  });
+
+  // update artboard position in the sidebar
+  var artboards = [];
+  rows.forEach(function (metasInRow) {
+    metasInRow.forEach(function (meta) {
+      artboards.push(meta.artboard);
+    });
+  });
+
+  artboards.reverse();
+  artboards.forEach(function (artboard) {
+    page.removeLayer(artboard);
+    page.addLayers(NSArray.arrayWithObject(artboard));
+  });
+};
+
+var _sketchUtil = __webpack_require__(0);
+
+var util = _interopRequireWildcard(_sketchUtil);
+
+var _common = __webpack_require__(2);
+
+var common = _interopRequireWildcard(_common);
+
+var _prefs = __webpack_require__(3);
+
+var prefs = _interopRequireWildcard(_prefs);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
+
+/***/ }),
 /* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.collectTargetArtboards = collectTargetArtboards;
+exports.generateArtboardMetas = generateArtboardMetas;
+
+var _sketchUtil = __webpack_require__(0);
+
+var util = _interopRequireWildcard(_sketchUtil);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
+
+/**
+ * Returns an array of all the artboards to target for grid operations
+ * (e.g. re-number, rearrange, etc)
+ */
+function collectTargetArtboards(context) {
+  if (context.selection.count()) {
+    // if there's an active selection inside an artboard, consider
+    // the artboards containing the selection the target
+    var selectedArtboards = util.arrayFromNSArray(context.selection).map(function (layer) {
+      return util.getContainingArtboard(layer);
+    }).filter(function (layer) {
+      return !!layer;
+    });
+    if (selectedArtboards.length) {
+      return selectedArtboards;
+    }
+  }
+
+  // otherwise, all artboards on the page
+  return util.arrayFromNSArray(context.document.currentPage().artboards());
+}
+
+/**
+ * Generates artboard metadata (primarily the object and frame)
+ */
+// Common functionality across related commands
+
+function generateArtboardMetas(artboards) {
+  return artboards.map(function (artboard) {
+    var frame = artboard.frame();
+    return {
+      artboard: artboard,
+      l: Number(frame.minX()),
+      t: Number(frame.minY()),
+      r: Number(frame.maxX()),
+      b: Number(frame.maxY())
+    };
+  });
+}
+
+/***/ }),
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 Object.defineProperty(exports, "__esModule", {
@@ -302,6 +338,16 @@ exports.getUserPrefs = getUserPrefs;
 exports.setUserPrefs = setUserPrefs;
 exports.getPagePrefs = getPagePrefs;
 exports.setPagePrefs = setPagePrefs;
+
+var _pluginUserPrefs = __webpack_require__(4);
+
+var pluginUserPrefs = _interopRequireWildcard(_pluginUserPrefs);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
+
+var PREFS_LAYER_KEY = 'artboard_tricks_spacing'; // for backward compatibility, don't change the key name
+
+
 /*
  * Copyright 2017 Google Inc.
  *
@@ -317,11 +363,6 @@ exports.setPagePrefs = setPagePrefs;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-var pluginUserPrefs = __webpack_require__(3);
-
-var PREFS_LAYER_KEY = 'artboard_tricks_spacing'; // for backward compatibility, don't change the key name
-
 
 var DEFAULTS = {
   xSpacing: 100,
@@ -359,7 +400,7 @@ function setPagePrefs(context, page, prefs) {
 }
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports) {
 
 Object.defineProperty(exports, "__esModule", {

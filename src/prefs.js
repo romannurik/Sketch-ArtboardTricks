@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-const pluginUserPrefs = require('./lib/plugin-user-prefs');
+import * as pluginUserPrefs from './lib/plugin-user-prefs';
 
 
 const PREFS_LAYER_KEY = 'artboard_tricks_spacing'; // for backward compatibility, don't change the key name
