@@ -96,7 +96,7 @@ class PreferencesDialog {
   buildPrefWidget(parentStackView, config) {
     let displayValueForPlaceholder = config.onDisplayValueForPlaceholder || (s => s);
     let fieldView = NSTextField.alloc().initWithFrame(CGRectMake(0, 0, 200, 25));
-    let labelView = NSTextField.labelWithString(config.label);
+    let labelView = this.labelWithString(config.label);
     labelView.setFont(NSFont.labelFontOfSize(11));
     parentStackView.addView_inGravity_(labelView, NSStackViewGravityTop);
     parentStackView.addView_inGravity_(fieldView, NSStackViewGravityTop);
@@ -116,6 +116,21 @@ class PreferencesDialog {
       },
       update: () => updateFieldView(),
     };
+  }
+
+  /**
+   * Returns a label-style NSTextField with the given text.
+   * Polyfill for NSTextField.labelWithString
+   */
+  labelWithString(text) {
+    // return NSTextField.labelWithString(text); // only available on macOS Sierra
+    let textField = NSTextField.alloc().initWithFrame(NSMakeRect(0, 0, 100, 20));
+    textField.setStringValue(text);
+    textField.setBezeled(false);
+    textField.setDrawsBackground(false);
+    textField.setEditable(false);
+    textField.setSelectable(false);
+    return textField;
   }
 
   /**

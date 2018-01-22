@@ -188,7 +188,7 @@ var PreferencesDialog = function () {
           return s;
         };
         var fieldView = NSTextField.alloc().initWithFrame(CGRectMake(0, 0, 200, 25));
-        var labelView = NSTextField.labelWithString(config.label);
+        var labelView = this.labelWithString(config.label);
         labelView.setFont(NSFont.labelFontOfSize(11));
         parentStackView.addView_inGravity_(labelView, NSStackViewGravityTop);
         parentStackView.addView_inGravity_(fieldView, NSStackViewGravityTop);
@@ -225,6 +225,28 @@ var PreferencesDialog = function () {
       }
 
       return buildPrefWidget;
+    }()
+
+    /**
+     * Returns a label-style NSTextField with the given text.
+     * Polyfill for NSTextField.labelWithString
+     */
+
+  }, {
+    key: 'labelWithString',
+    value: function () {
+      function labelWithString(text) {
+        // return NSTextField.labelWithString(text); // only available on macOS Sierra
+        var textField = NSTextField.alloc().initWithFrame(NSMakeRect(0, 0, 100, 20));
+        textField.setStringValue(text);
+        textField.setBezeled(false);
+        textField.setDrawsBackground(false);
+        textField.setEditable(false);
+        textField.setSelectable(false);
+        return textField;
+      }
+
+      return labelWithString;
     }()
 
     /**
