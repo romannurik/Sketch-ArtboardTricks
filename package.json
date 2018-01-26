@@ -1,6 +1,6 @@
 {
 	"name": "sketch-artboardtricks",
-	"version": "1.11.1",
+	"version": "1.11.2",
 	"description": "A Sketch plugin containing variety of tricks for dealing with artboards.",
 	"scripts": {
 		"build": "skpm-build && mkdir -p ArtboardTricks.sketchplugin/Contents/Resources && cp -rf resources/*.png ArtboardTricks.sketchplugin/Contents/Resources",
