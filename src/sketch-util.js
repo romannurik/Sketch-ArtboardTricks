@@ -14,10 +14,20 @@
  * limitations under the License.
  */
 
+
+/**
+ * Returns true if the given layer is an artboard-like object (i.e. an artboard
+ * or a symbol master).
+ */
 export function isArtboard(layer) {
   return layer instanceof MSArtboardGroup || layer instanceof MSSymbolMaster;
 }
 
+
+/**
+ * Returns the artboard containing the given layer, null if the layer isn't
+ * contained within an artboard, or the layer if it is itself an artboard.
+ */
 export function getContainingArtboard(layer) {
   while (layer && !isArtboard(layer)) {
     layer = layer.parentGroup();
@@ -26,11 +36,19 @@ export function getContainingArtboard(layer) {
   return layer;
 }
 
+
+/**
+ * Replaces the current selection with the given set of layers.
+ */
 export function setSelection(context, layers) {
   context.document.currentPage().changeSelectionBySelectingLayers(null);
   layers.forEach(l => l.select_byExpandingSelection_(true, true));
 }
 
+
+/**
+ * Returns a JavaScript array copy of the given NSArray.
+ */
 export function arrayFromNSArray(nsArray) {
   let arr = [];
   for (let i = 0; i < nsArray.count(); i++) {
@@ -39,11 +57,24 @@ export function arrayFromNSArray(nsArray) {
   return arr;
 }
 
-export function zeropad(s, length = 1) {
-  s = String(s);
-  s = s || '';
-  while (s.length < length) {
-    s = '0' + s;
-  }
-  return s;
+
+/**
+ * Reorders the given layers in the layer list based on their position in the array.
+ * If they're in different containing groups, reorders locally within that group.
+ */
+export function reorderLayers(layers) {
+  // rearrange in layer list
+  let indexesInParents = {};
+
+  layers.forEach((layer, index) => {
+    let parent = layer.parentGroup();
+    let parentId = String(parent.objectID());
+    if (!(parentId in indexesInParents)) {
+      let siblings = arrayFromNSArray(parent.layers());
+      indexesInParents[parentId] = siblings.findIndex(
+          l => l.parentGroup() === parent && layers.indexOf(l) >= 0);
+    }
+    parent.removeLayer(layer);
+    parent.insertLayer_atIndex_(layer, indexesInParents[parentId]);
+  });
 }

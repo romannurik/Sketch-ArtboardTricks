@@ -79,7 +79,7 @@ exports.isArtboard = isArtboard;
 exports.getContainingArtboard = getContainingArtboard;
 exports.setSelection = setSelection;
 exports.arrayFromNSArray = arrayFromNSArray;
-exports.zeropad = zeropad;
+exports.reorderLayers = reorderLayers;
 /*
  * Copyright 2017 Google Inc.
  *
@@ -96,10 +96,18 @@ exports.zeropad = zeropad;
  * limitations under the License.
  */
 
+/**
+ * Returns true if the given layer is an artboard-like object (i.e. an artboard
+ * or a symbol master).
+ */
 function isArtboard(layer) {
   return layer instanceof MSArtboardGroup || layer instanceof MSSymbolMaster;
 }
 
+/**
+ * Returns the artboard containing the given layer, null if the layer isn't
+ * contained within an artboard, or the layer if it is itself an artboard.
+ */
 function getContainingArtboard(layer) {
   while (layer && !isArtboard(layer)) {
     layer = layer.parentGroup();
@@ -108,6 +116,9 @@ function getContainingArtboard(layer) {
   return layer;
 }
 
+/**
+ * Replaces the current selection with the given set of layers.
+ */
 function setSelection(context, layers) {
   context.document.currentPage().changeSelectionBySelectingLayers(null);
   layers.forEach(function (l) {
@@ -115,6 +126,9 @@ function setSelection(context, layers) {
   });
 }
 
+/**
+ * Returns a JavaScript array copy of the given NSArray.
+ */
 function arrayFromNSArray(nsArray) {
   var arr = [];
   for (var i = 0; i < nsArray.count(); i++) {
@@ -123,15 +137,26 @@ function arrayFromNSArray(nsArray) {
   return arr;
 }
 
-function zeropad(s) {
-  var length = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
+/**
+ * Reorders the given layers in the layer list based on their position in the array.
+ * If they're in different containing groups, reorders locally within that group.
+ */
+function reorderLayers(layers) {
+  // rearrange in layer list
+  var indexesInParents = {};
 
-  s = String(s);
-  s = s || '';
-  while (s.length < length) {
-    s = '0' + s;
-  }
-  return s;
+  layers.forEach(function (layer, index) {
+    var parent = layer.parentGroup();
+    var parentId = String(parent.objectID());
+    if (!(parentId in indexesInParents)) {
+      var siblings = arrayFromNSArray(parent.layers());
+      indexesInParents[parentId] = siblings.findIndex(function (l) {
+        return l.parentGroup() === parent && layers.indexOf(l) >= 0;
+      });
+    }
+    parent.removeLayer(layer);
+    parent.insertLayer_atIndex_(layer, indexesInParents[parentId]);
+  });
 }
 
 /***/ }),
@@ -197,7 +222,7 @@ function collectTargetArtboards(context) {
     }).filter(function (layer) {
       return !!layer;
     });
-    if (selectedArtboards.length) {
+    if (selectedArtboards.length >= 2) {
       return selectedArtboards;
     }
   }

@@ -71,12 +71,26 @@ export default function(context) {
     }
 
     // create prefix (e.g. "301" and "415.4" with subflows)
-    let prefix = util.zeropad(row, numRows >= 10 ? 2 : 1)
+    let prefix = zeropad(row, numRows >= 10 ? 2 : 1)
         + currentPrefs.rowColSeparator
-        + util.zeropad(col, 2)
+        + zeropad(col, 2)
         + (subCol > 0 ? '.' + (subCol) : '');
 
     // add prefix to the name
     meta.artboard.setName(`${currentNamePath}${prefix}${currentPrefs.numberTitleSeparator}${baseName}`);
   });
 }
+
+
+/**
+ * Left-pads the given string with zeros to the given length.
+ */
+function zeropad(s, length = 1) {
+  s = String(s);
+  s = s || '';
+  while (s.length < length) {
+    s = '0' + s;
+  }
+  return s;
+}
+

@@ -14,7 +14,7 @@ export function collectTargetArtboards(context) {
     let selectedArtboards = util.arrayFromNSArray(context.selection)
         .map(layer => util.getContainingArtboard(layer))
         .filter(layer => !!layer);
-    if (selectedArtboards.length) {
+    if (selectedArtboards.length >= 2) {
       return selectedArtboards;
     }
   }

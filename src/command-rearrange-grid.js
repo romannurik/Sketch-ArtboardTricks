@@ -118,9 +118,5 @@ export default function(context) {
     });
   });
 
-  artboards.reverse();
-  artboards.forEach(artboard => {
-    page.removeLayer(artboard);
-    page.addLayers(NSArray.arrayWithObject(artboard));
-  });
+  util.reorderLayers(artboards);
 }
