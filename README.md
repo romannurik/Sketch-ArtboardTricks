@@ -4,13 +4,13 @@ Contains a set of artboard tricks for Sketch. See below for more.
 
 # Installation
 
-You can install the plugin with either Sketch Runner or Sketchpacks.
+You can install the plugin with Sketch Runner.
 
 <a href="http://bit.ly/SketchRunnerWebsite">
   <img src="http://bit.ly/RunnerBadgeBlue" width="160">
 </a>
 
-Alternatively, just drop the `.sketchplugin` folder into your Sketch plugins folder (**Plugins > Manage Plugins > (settings gear) > Reveal Plugins Folder** to find it).
+Alternatively, just download the latest [release](https://github.com/romannurik/Sketch-FlowExporter/releases) and double-click the `.sketchplugin` file to install.
 
 # The Commands
 
