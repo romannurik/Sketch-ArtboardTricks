@@ -10,7 +10,7 @@ You can install the plugin with Sketch Runner.
   <img src="http://bit.ly/RunnerBadgeBlue" width="160">
 </a>
 
-Alternatively, just download the latest [release](https://github.com/romannurik/Sketch-FlowExporter/releases) and double-click the `.sketchplugin` file to install.
+Alternatively, just download the latest [release](https://github.com/romannurik/Sketch-ArtboardTricks/releases) and double-click the `.sketchplugin` file to install.
 
 # The Commands
 
