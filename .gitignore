@@ -1,2 +1,5 @@
 .DS_Store
 node_modules
+
+# Sketch Runner no longer requires this in the repo
+*.sketchplugin
