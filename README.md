@@ -4,15 +4,13 @@ Contains a set of artboard tricks for Sketch. See below for more.
 
 # Installation
 
-You can install the plugin with Sketch Runner.
+* [Download the latest release](https://github.com/romannurik/Sketch-ArtboardTricks/releases/latest) and double-click the `.sketchplugin` file to install.
 
-<a href="http://bit.ly/SketchRunnerWebsite">
-  <img src="http://bit.ly/RunnerBadgeBlue" width="160">
-</a>
+* Or you can install the plugin with [Sketch Runner](http://bit.ly/SketchRunnerWebsite).
 
-Alternatively, just download the latest [release](https://github.com/romannurik/Sketch-ArtboardTricks/releases) and double-click the `.sketchplugin` file to install.
+  <a href="http://bit.ly/SketchRunnerWebsite"><img src="http://bit.ly/RunnerBadgeBlue" width="160"></a>
 
-# The Commands
+# The commands
 
 ## Rearrange Artboards Into Grid
 
