@@ -3,6 +3,9 @@
 import * as util from './sketch-util';
 
 
+const COL_LENGTH = 2; // # of digits for the column
+
+
 /**
  * Returns an array of all the artboards to target for grid operations
  * (e.g. re-number, rearrange, etc)
@@ -38,4 +41,74 @@ export function generateArtboardMetas(artboards) {
       b: Number(frame.maxY())
     };
   });
+}
+
+
+/**
+ * Parses the given artboard name based on the given resolved preferences.
+ */
+export function parseCurrentArtboardName(fullName, resolvedPrefs) {
+  let {numberTitleSeparator} = resolvedPrefs;
+  let path = fullName.substring(0, fullName.lastIndexOf('/') + 1);
+  let currentName = fullName.slice(path.length);
+  let [_, rowCol, subCol, baseName] = currentName.match(new RegExp(
+      '^(?:(\\d+)(?:\.(\\d+))?)?' + // row/col/subcol
+      '(?:' + escapeRegExp(numberTitleSeparator) + ')?' + // separator
+      '(.+?)?$')); // basename
+
+  subCol = Number(subCol || 0);
+  let row = 0;
+  let col = -1;
+  if (rowCol) {
+    row = Number(rowCol.slice(0, -COL_LENGTH));
+    col = Number(rowCol.slice(-COL_LENGTH));
+  }
+
+  return {path, row, col, subCol, baseName};
+}
+
+/**
+ * Creates a new artboard name based on the given pieces and resolved preferences.
+ */
+export function composeArtboardName(parts, resolvedPrefs, {numRows = 1} = {}) {
+  let {numberTitleSeparator} = resolvedPrefs;
+  let {path, row, col, subCol, baseName} = parts;
+
+  let name = path || '';
+
+  // create prefix (e.g. "301" and "415.4" with subflows)
+  let hasNumber = row && (col >= 0);
+  if (hasNumber) {
+    name += zeropad(row, numRows >= 10 ? 2 : 1)
+        // + String(rowColSeparator)
+        + zeropad(col, COL_LENGTH)
+        + (subCol ? ('.' + String(subCol)) : '');
+  }
+
+  if (baseName) {
+    name += (hasNumber ? numberTitleSeparator : '') + baseName;
+  }
+
+  return name;
+}
+
+
+/**
+ * Left-pads the given string with zeros to the given length.
+ */
+function zeropad(s, length = 1) {
+  s = String(s) || '';
+  while (s.length < length) {
+    s = '0' + s;
+  }
+  return s;
+}
+
+
+/**
+ * Escape a string for use in a regex
+ * From https://stackoverflow.com/a/6969486/102703
+ */
+function escapeRegExp(string) {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
 }

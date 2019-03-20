@@ -14,22 +14,22 @@
  * limitations under the License.
  */
 
-import * as util from './sketch-util';
 import * as common from './common';
+import * as prefs from './prefs';
 
 
 export default function(context) {
+  let page = context.document.currentPage();
+  let resolvedPrefs = prefs.resolvePagePrefs(context, page);
   let artboards = common.collectTargetArtboards(context);
 
   // update artboard names
   artboards.forEach(artboard => {
     // strip off current digits and dots
-    let fullName = artboard.name();
-    let currentNamePath = fullName.substring(0, fullName.lastIndexOf('/') + 1);
-    let currentName = fullName.slice(currentNamePath.length);
-    currentName = currentName.replace(/^[\d.]*[-_]?/, '');
+    let nameParts = common.parseCurrentArtboardName(artboard.name(), resolvedPrefs);
+    nameParts.row = 0;
 
     // reset the name
-    artboard.setName(currentNamePath + currentName);
+    artboard.setName(common.composeArtboardName(nameParts, resolvedPrefs, {}));
   });
 }

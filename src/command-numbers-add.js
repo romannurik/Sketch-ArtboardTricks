@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-import * as util from './sketch-util';
 import * as common from './common';
 import * as prefs from './prefs';
 
 
 export default function(context) {
   let page = context.document.currentPage();
-  let currentPrefs = prefs.resolvePagePrefs(context, page);
+  let resolvedPrefs = prefs.resolvePagePrefs(context, page);
   let artboardMetas = common.generateArtboardMetas(
       common.collectTargetArtboards(context));
 
@@ -45,9 +44,7 @@ export default function(context) {
   artboardMetas.forEach(meta => {
     // strip off current digits and dots
     let fullName = meta.artboard.name();
-    let currentNamePath = fullName.substring(0, fullName.lastIndexOf('/') + 1);
-    let currentName = fullName.slice(currentNamePath.length);
-    let [_, currentNumber, baseName] = currentName.match(/^([\d.]*)[_-]?(.*)$/);
+    let nameParts = common.parseCurrentArtboardName(fullName, resolvedPrefs);
 
     if (lastMetaT === null || lastMetaT != meta.t) {
       lastMetaT = meta.t;
@@ -56,7 +53,7 @@ export default function(context) {
       col = -1;
     }
 
-    if (currentNumber.indexOf('.') >= 0) {
+    if (nameParts.subCol) {
       // in a subcol
       ++subCol;
       col = Math.max(0, col);
@@ -70,27 +67,12 @@ export default function(context) {
       ++col;
     }
 
-    // create prefix (e.g. "301" and "415.4" with subflows)
-    let prefix = zeropad(row, numRows >= 10 ? 2 : 1)
-        + currentPrefs.rowColSeparator
-        + zeropad(col, 2)
-        + (subCol > 0 ? '.' + (subCol) : '');
+    nameParts.row = row;
+    nameParts.col = col;
+    nameParts.subCol = subCol;
 
     // add prefix to the name
-    meta.artboard.setName(`${currentNamePath}${prefix}${currentPrefs.numberTitleSeparator}${baseName}`);
+    meta.artboard.setName(common.composeArtboardName(nameParts, resolvedPrefs, {numRows}));
   });
-}
-
-
-/**
- * Left-pads the given string with zeros to the given length.
- */
-function zeropad(s, length = 1) {
-  s = String(s);
-  s = s || '';
-  while (s.length < length) {
-    s = '0' + s;
-  }
-  return s;
 }
 

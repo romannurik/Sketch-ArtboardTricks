@@ -40,12 +40,12 @@ const WIDGET_CONFIGS = [
   //   onDisplayValueForPlaceholder: displayValueForChar,
   //   onParse: onParseString,
   // },
-  // {
-  //   label: 'Numbering: Number/title separator',
-  //   key: 'numberTitleSeparator',
-  //   onDisplayValueForPlaceholder: displayValueForChar,
-  //   onParse: onParseString,
-  // }
+  {
+    label: 'Numbering: Number/title separator',
+    key: 'numberTitleSeparator',
+    onDisplayValueForPlaceholder: displayValueForChar,
+    onParse: onParseString,
+  }
 ];
 
 

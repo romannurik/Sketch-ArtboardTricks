@@ -5,6 +5,7 @@
   "compatibleVersion": 41,
   "bundleVersion": 1,
   "name": "Artboard Tricks",
+  "icon": "icon_plugin.png",
   "commands" : [
     {
       "script" : "command-select-artboards.js",
