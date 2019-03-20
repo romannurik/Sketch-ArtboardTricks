@@ -22,7 +22,7 @@
 		"sketch": ">=3.0"
 	},
 	"devDependencies": {
-		"@skpm/builder": "^0.1.4"
+		"@skpm/builder": "^0.5.16"
 	},
 	"skpm": {
 		"manifest": "src/manifest.json",
