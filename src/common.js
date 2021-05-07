@@ -35,10 +35,10 @@ export function generateArtboardMetas(artboards) {
     let frame = artboard.frame();
     return {
       artboard,
-      l: Number(frame.minX()),
-      t: Number(frame.minY()),
-      r: Number(frame.maxX()),
-      b: Number(frame.maxY())
+      l: Number(frame.x()),
+      t: Number(frame.y()),
+      r: Number(frame.x() + frame.width()),
+      b: Number(frame.y() + frame.height())
     };
   });
 }
